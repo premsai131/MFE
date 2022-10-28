@@ -1,0 +1,17 @@
+{
+  "chromeWebSecurity": false,
+  "viewportWidth": 1920,
+  "viewportHeight": 1240,
+  "pageLoadTimeout": 70000,
+  "video": false,
+  "retries": {
+    "openMode": 0,
+    "runMode": 0
+  },
+  "testFiles": [
+    "cypress/integration/2-advanced-examples/smoke/home.spec.ts",
+    "cypress/integration/2-advanced-examples/smoke/calender.spec.ts",
+    "cypress/integration/2-advanced-examples/smoke/cart.spec.ts",
+    "cypress/integration/2-advanced-examples/smoke/pdp.spec.ts"
+  ]
+}
