@@ -15,7 +15,7 @@ jobs:
 
       - name: run cypress
         run: |
-          cp ../ci-scripts/cypress_calender.sh  cypress_calender.sh 
+          cp ../../ci-scripts/cypress_calender.sh  cypress_calender.sh 
           sh cypress_calender.sh
 
       - name: Cache
