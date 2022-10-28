@@ -12,10 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
+      - name: Install dependencies
+        run: npm install
 
       - name: run cypress
+        working-directory: ${{env.working-directory}}
+        
         run: |
-          cp ci-scripts/cypress_calender.sh  cypress_calender.sh 
+          cp ../ci-scripts/cypress_calender.sh  cypress_calender.sh 
           sh cypress_calender.sh
 
       - name: Cache
