@@ -14,4 +14,4 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
-          spec: ci-scripts/cypress_calender.sh
+          command: ci-scripts/cypress_calender.sh
