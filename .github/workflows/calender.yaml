@@ -7,16 +7,21 @@ jobs:
   cypress-run:
     name: Cypress run
     runs-on: ubuntu-20.04
+    env:
+      working-directory: ./cypress   
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - name: Install dependencies
+        working-directory: ${{env.working-directory}}
+        run: npm install
 
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-          run: |
-            cp ../ci-scripts/cypress_calender.sh  cypress_calender.sh 
-            sh cypress_calender.sh
+      - name: run cypress
+        working-directory: ${{env.working-directory}}
+        run: |
+          cp ../ci-scripts/cypress_calender.sh  cypress_calender.sh 
+          sh cypress_calender.sh
+
       - name: Cache
         uses: actions/cache@v2
         with:
@@ -25,3 +30,5 @@ jobs:
             !~/cache/exclude
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+
+
