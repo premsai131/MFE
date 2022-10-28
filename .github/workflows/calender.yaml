@@ -14,4 +14,4 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
-          spec: cypress/integration/2-advanced-examples/smoke/calenderstandalone.spec.ts
+          spec: ci-scripts/cypress_calender.sh
