@@ -20,5 +20,4 @@ jobs:
       - name: run cypress
         working-directory: ${{env.working-directory}}
         run: |
-          cp ../ci-scripts/cypress_calender.sh  cypress_calender.sh 
-          sh cypress_calender.sh
+          cp ../ci-scripts/cypress_calender.sh 
