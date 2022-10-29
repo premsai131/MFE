@@ -25,13 +25,6 @@ jobs:
           cp ../ci-scripts/cypress_calender.sh  cypress_calender.sh 
           sh cypress_calender.sh
 
-      - name: Cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/cache
-            !~/cache/exclude
-            **/node_modules
-          # key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+     
 
 
