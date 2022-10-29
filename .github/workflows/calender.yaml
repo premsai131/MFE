@@ -2,7 +2,6 @@ name: Cypress Tests
 on:
   push:
     branches: [master]
-    
 jobs:
   cypress-run:
     name: Cypress run
@@ -12,11 +11,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-          working-directory: ${{env.working-directory}}
-          command: microapptests/ci-scripts/cypress_calender.sh
-          run: cp ../ci-scripts/cypress_calender.sh
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - name: Install dependencies
+        working-directory: ${{env.working-directory}}
+        run: npm install
 
-
+      - name: run cypress
+        working-directory: ${{env.working-directory}}
+        run: |
+          cp ../ci-scripts/cypress_calender.sh  cypress_calender.sh 
+          sh cypress_calender.sh
