@@ -15,11 +15,9 @@ jobs:
       - uses: actions/setup-node@v2
 
       - name: Install dependencies
-        working-directory: ${{env.working-directory}}
         run: npm install
 
       - name: run cypress
-        working-directory: ${{env.working-directory}}
 
         run: |
           cp ../ci-scripts/cypress_calender.sh  cypress_calender.sh 
