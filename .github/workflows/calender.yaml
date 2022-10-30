@@ -20,7 +20,9 @@ jobs:
       - name: run cypress
         working-directory: ${{env.working-directory}}
         run: |
-          npx  $(npm bin)/cypress run --spec integration/calenderstandalone.spec.ts
+          cp ../ci-scripts/cypress_calender.sh  cypress_calender.sh 
+          echo pwd
+          sh cypress_calender.sh
       - name: Cache
         uses: actions/cache@v2
         with:
