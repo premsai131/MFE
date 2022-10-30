@@ -7,7 +7,7 @@ jobs:
     name: Cypress run
     runs-on: ubuntu-20.04
     env:
-      working-directory: ./cypress   
+      working-directory: cypress   
     steps:
       - name: Checkout
         uses: actions/checkout@v2
