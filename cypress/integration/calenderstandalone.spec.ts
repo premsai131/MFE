@@ -1,6 +1,6 @@
-import { BaseDependencies } from "../../../robots/BaseRobot";
-import { CalenderEyes, CalenderHands } from "../../../robots/calender";
-import { HomePageEyes, HomePageHands } from "../../../robots/homepage";
+import { BaseDependencies } from "../robots/BaseRobot";
+import { CalenderEyes, CalenderHands } from "../robots/calender";
+import { HomePageEyes, HomePageHands } from "../robots/homepage";
 const daysInaMonth = require("./../../../data/calender.json");
 const homePageEyes = new HomePageEyes();
 const homePageHands = new HomePageHands();
@@ -27,6 +27,7 @@ context('Verify the functionlity of the calender micro app', () => {
             })
             homePageDependancies.login();
         })
+        
         it('verify main page header in calender', () => {
             calenderEyes.seesCurrentMonthDisaplyed('October 2022')
             calenderEyes.seesMonthWeekAndDaybuttons()
