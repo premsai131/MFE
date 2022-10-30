@@ -1,7 +1,11 @@
 name: Cypress Tests
 on:
-  schedule: 
-    - cron: "* */8 * * *"
+  push:
+    branches:
+      - "master"
+    
+  # schedule: 
+  #   - cron: "* */8 * * *"
     
 jobs:
   cypress-run:
