@@ -27,13 +27,14 @@ context('Verify the functionlity of the calender micro app', () => {
             })
             homePageDependancies.login();
         })
-        
+
         
         it('verify main page header in calender', () => {
             calenderEyes.seesCurrentMonthDisaplyed('October 2022')
             calenderEyes.seesMonthWeekAndDaybuttons()
             calenderEyes.seesTodayButton()
         })
+        
     })
     // describe('Verify the functionality of month view calender ', () => {
     //     it('verify the ui of monthly view in calender', () => {
