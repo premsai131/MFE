@@ -20,7 +20,7 @@ jobs:
       - name: run cypress
         working-directory: ${{env.working-directory}}
         run: |
-          npx  $(npm bin)/cypress run --config-file regressionconfig.json
+          npx  $(npm bin)/cypress run --spec integration/calenderstandalone.spec.ts
       - name: Cache
         uses: actions/cache@v2
         with:
