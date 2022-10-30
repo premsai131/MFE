@@ -1,0 +1,15 @@
+{
+    "chromeWebSecurity": false,
+    "viewportWidth": 1920,
+    "viewportHeight": 1240,
+    "pageLoadTimeout": 180000,
+    "video": false,
+    "retries": {
+      "openMode": 0,
+      "runMode": 0
+    },
+    "testFiles": [
+      "smoke/calenderstandalone.spec.ts"
+      
+    ]
+  }
