@@ -9,6 +9,6 @@
       "runMode": 0
     },
     "testFiles": [
-      "2-advanced-examples/smoke/calenderstandalone.spec.ts"
+      "calenderstandalone.spec.ts"
     ]
   }
