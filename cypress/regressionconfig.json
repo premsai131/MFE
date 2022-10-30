@@ -9,6 +9,6 @@
       "runMode": 0
     },
     "testFiles": [
-      "calenderstandalone.spec.ts"
+      "cypress/integration/calenderstandalone.spec.ts"
     ]
   }
