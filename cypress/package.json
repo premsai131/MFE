@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "cypress": " $(npm bin)/cypress open",
-    "clean-reportsfolder": "rm -rf cypress/reports/*"
+    "clean-reportsfolder": "rm -rf cypress/reports/*",
+    "regression": "npx  $(npm bin)/cypress run --config-file regressionconfig.json",
   },
   "keywords": [],
   "author": "",
