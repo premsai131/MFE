@@ -1,7 +1,7 @@
 import { BaseDependencies } from "../robots/BaseRobot";
 import { CalenderEyes, CalenderHands } from "../robots/calender";
 import { HomePageEyes, HomePageHands } from "../robots/homepage";
-const daysInaMonth = require("./../../../data/calender.json");
+const daysInaMonth = require("../data/calender.json");
 const homePageEyes = new HomePageEyes();
 const homePageHands = new HomePageHands();
 const calenderEyes = new CalenderEyes();
@@ -34,7 +34,7 @@ context('Verify the functionlity of the calender micro app', () => {
             calenderEyes.seesMonthWeekAndDaybuttons()
             calenderEyes.seesTodayButton()
         })
-        
+
     })
     // describe('Verify the functionality of month view calender ', () => {
     //     it('verify the ui of monthly view in calender', () => {
