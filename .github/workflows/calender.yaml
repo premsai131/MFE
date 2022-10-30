@@ -21,7 +21,6 @@ jobs:
         working-directory: ${{env.working-directory}}
         run: |
           cp ../ci-scripts/cypress_calender.sh  cypress_calender.sh 
-          echo pwd
           sh cypress_calender.sh
       - name: Cache
         uses: actions/cache@v2
