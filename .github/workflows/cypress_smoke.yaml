@@ -24,9 +24,6 @@ jobs:
 
       - name: run cypress
         working-directory: ${{env.working-directory}}
-        with:
-          name : running in chrome
-          browser: chrome
         run: |
           cp ../ci-scripts/cypress_smoke.sh  cypress_smoke.sh 
           sh cypress_smoke.sh

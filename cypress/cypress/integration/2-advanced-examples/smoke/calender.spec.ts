@@ -49,7 +49,7 @@ context('Verify the functionlity of the calender micro app', () => {
             cy.log(daysInaMonth.october)
             calenderEyes.seesNumberOfdaysInaMonth(daysInaMonth.october);
         })
-        it('Verify adding of event in month view calender', () => {
+        it.skip('Verify adding of event in month view calender', () => {
             let currentDate = new Date().toJSON().slice(0, 10);
             calenderHands.clickOnTodaysDatefield(currentDate)
             calenderEyes.verifyEventDialog()
