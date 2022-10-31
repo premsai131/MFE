@@ -25,12 +25,8 @@ jobs:
       - name: run cypress
         working-directory: ${{env.working-directory}}
         run: |
-          cp ../ci-scripts/cypress_calender.sh  cypress_calender.sh 
-          cp ../ci-scripts/cypress_homepage.sh  cypress_homepage.sh
-          cp ../ci-scripts/cypress_pdp.sh   cypress_pdp.sh
-          sh cypress_homepage.sh
-          sh cypress_calender.sh
-          sh cypress_pdp.sh
+          cp ../ci-scripts/cypress_smoke.sh  cypress_smoke.sh 
+          sh cypress_smoke.sh
       - name: Cache
         uses: actions/cache@v2
         with:

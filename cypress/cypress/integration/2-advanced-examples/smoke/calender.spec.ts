@@ -34,7 +34,7 @@ context('Verify the functionlity of the calender micro app', () => {
         })
         it('Verify login functionality', () => {
             calenderHands.clickonCalenderIcon()
-            cy.wait(15000)
+            cy.wait(10000)
             homePageDependancies.login();
         })
         it('verify main page header in calender', () => {
