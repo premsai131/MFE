@@ -18,7 +18,7 @@ describe("Verify homepage elements", () => {
         homePageEyes.seesAvatarlogo()
     })
     it('Verify products in the main page', () => {
-        productsCount = homePageEyes.getProductsCount();
+        productsCount = 10
         cy.log(productsCount)
         homePageEyes.seesNewArrivalTextVisible()
         homePageEyes.seesProductImages(productsCount)

@@ -10,7 +10,7 @@ export class CalenderEyes extends BaseEyes {
         this.seesDomContainText('[title="day view"]', 'day')
     }
     seesTodayButton() {
-        this.seesDomContainText('[title="This ;month"]', 'today')
+        this.seesDomContainText('[title="This month"]', 'today')
     }
     seesDaysTextVisibleInCalender() {
         let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -52,7 +52,7 @@ export class CalenderEyes extends BaseEyes {
         this.seesDomContainText('a[class*="fc-daygrid-event"]', starttime)
         this.seesDomContainText('a[class*="fc-daygrid-event"]>div', eventname)
     }
-    seesNewlyAddedEventInWeeklyView(currentdate:any){
+    seesNewlyAddedEventInWeeklyView(currentdate: any) {
         cy.get(`[data-date="${currentdate}"] [class="fc-event-title fc-sticky"]`).scrollIntoView()
         this.seesDomVisible(`[data-date="${currentdate}"] [class="fc-event-title fc-sticky"]`)
     }
@@ -65,19 +65,19 @@ export class CalenderEyes extends BaseEyes {
     seesEndTime(endtime) {
         cy.get('[placeholder="hh:mm (a|p)m"]').eq(1).should('have.value', endtime)
     }
-    seesLabeltextWithCurrentDate(text:any){
+    seesLabeltextWithCurrentDate(text: any) {
         cy.scrollTo('top')
-      this.seesDomContainText('div>h2',text)
+        this.seesDomContainText('div>h2', text)
     }
-    seescurrentDaytextVisible(text:any){
-        this.seesDomContainText('div>a',text)
+    seescurrentDaytextVisible(text: any) {
+        this.seesDomContainText('div>a', text)
     }
-    seesNewlyAddedEventInDayView(eventtime:any,eventname:any){
-        this.seesDomContainText('[class="fc-event-time"]',eventtime)
-        this.seesDomContainText('[class="fc-event-title fc-sticky"]',eventname)
+    seesNewlyAddedEventInDayView(eventtime: any, eventname: any) {
+        this.seesDomContainText('[class="fc-event-time"]', eventtime)
+        this.seesDomContainText('[class="fc-event-title fc-sticky"]', eventname)
     }
-    seesDeleteEventButton(){
-        this.seesDomContainText('button','Delete')
+    seesDeleteEventButton() {
+        this.seesDomContainText('button', 'Delete')
     }
 }
 export class CalenderHands extends BaseHands {
@@ -87,14 +87,14 @@ export class CalenderHands extends BaseHands {
     clickOnMonthView() {
         this.clickOnDomContainText('[title="month view"]', 'month')
     }
-    clickOnweekViewButton(){
-        this.clickOnDomContainText('[title="week view"]','week')
+    clickOnweekViewButton() {
+        this.clickOnDomContainText('[title="week view"]', 'week')
     }
-    clickOnDayViewButton(){
-        this.clickOnDomContainText('[title="day view"]','day')
+    clickOnDayViewButton() {
+        this.clickOnDomContainText('[title="day view"]', 'day')
     }
     clickOnTodaysDatefield(currentdate) {
-
+        cy.get(`[data-date="${currentdate}"]`).scrollIntoView()
         this.clickOnDomElement(`[data-date="${currentdate}"]`)
     }
     typeEventName(name: any) {
@@ -102,29 +102,29 @@ export class CalenderHands extends BaseHands {
         this.typeTextOnDom('[placeholder="Add an event"]', name)
     }
     setStartTimeas(time) {
-        this.clearTheInputFieldAtIndex('[placeholder="hh:mm (a|p)m"]',0)
-        this.typeTextOnDomAtIndex('[placeholder="hh:mm (a|p)m"]', time,0)
+        this.clearTheInputFieldAtIndex('[placeholder="hh:mm (a|p)m"]', 0)
+        this.typeTextOnDomAtIndex('[placeholder="hh:mm (a|p)m"]', time, 0)
     }
     setEndTimeas(time) {
-        this.clearTheInputFieldAtIndex('[placeholder="hh:mm (a|p)m"]',1)
-        this.typeTextOnDomAtIndex('[placeholder="hh:mm (a|p)m"]', time,1)
+        this.clearTheInputFieldAtIndex('[placeholder="hh:mm (a|p)m"]', 1)
+        this.typeTextOnDomAtIndex('[placeholder="hh:mm (a|p)m"]', time, 1)
     }
     clickOnAddeventButton() {
         this.clickOnDomElement('[class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1vn7q1e-MuiButtonBase-root-MuiButton-root"]')
     }
-    clickOnDeleteEventButton(){
+    clickOnDeleteEventButton() {
         this.clickOnDomElement('[class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1knvlb0-MuiButtonBase-root-MuiButton-root"]')
     }
-    clickOnNewlyAddedEvent(eventname:any){
-        this.clickOnDomContainText('[class="fc-event-title"]',eventname)
+    clickOnNewlyAddedEvent(eventname: any) {
+        this.clickOnDomContainText('[class="fc-event-title"]', eventname)
     }
-    closeEventDialog(){
+    closeEventDialog() {
         this.clickOnDomElement('[data-testid="CloseIcon"]')
     }
-    clickonEditeventButton(){
-        this.clickOnDomContainText('button','Edit event')
+    clickonEditeventButton() {
+        this.clickOnDomContainText('button', 'Edit event')
     }
-    clickOnEvent(eventname:any){
-        this.clickOnDomContainText('[class="fc-event-title fc-sticky"]',eventname)
+    clickOnEvent(eventname: any) {
+        this.clickOnDomContainText('[class="fc-event-title fc-sticky"]', eventname)
     }
 }

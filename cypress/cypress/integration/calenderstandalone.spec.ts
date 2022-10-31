@@ -39,14 +39,15 @@ context('Verify the functionlity of the calender micro app', () => {
             cy.log(daysInaMonth.october)
             calenderEyes.seesNumberOfdaysInaMonth(daysInaMonth.october);
         })
-        it.skip('Verify adding of event in month view calender', () => {
+        it('Verify adding of event in month view calender', () => {
             let currentDate = new Date().toJSON().slice(0, 10);
-                calenderHands.clickOnTodaysDatefield(currentDate)
-                calenderEyes.verifyEventDialog()
-                calenderHands.typeEventName(eventName)
-                calenderHands.setStartTimeas(starttime)
-                calenderHands.setEndTimeas(endtime)
-            // calenderEyes.seesNewlyAddedEventInMonthView('6:45p', eventName)
+            calenderHands.clickOnTodaysDatefield(currentDate)
+            calenderEyes.verifyEventDialog()
+            calenderHands.typeEventName(eventName)
+            calenderHands.setStartTimeas(starttime)
+            calenderHands.setEndTimeas(endtime)
+            calenderHands.clickOnAddeventButton()
+            calenderEyes.seesNewlyAddedEventInMonthView('6:45p', eventName)
         })
         it('Verify editing of newly added event in month view', () => {
             calenderHands.clickOnNewlyAddedEvent(eventName)
@@ -70,7 +71,7 @@ context('Verify the functionlity of the calender micro app', () => {
     describe('verify weekly view in calender', () => {
         it('verify the UI of weekly view in calender', () => {
             calenderHands.clickOnweekViewButton();
-            calenderEyes.seesLabeltextWithWeeklyDate('Oct 23 – 29, 2022')
+            calenderEyes.seesLabeltextWithWeeklyDate('Oct 30 – Nov 5, 2022')
             calenderEyes.seesDateAndDayTextFortheWeekNotNull()
             calenderEyes.seesAllDayTimeforTheDate()
         })

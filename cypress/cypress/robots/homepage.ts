@@ -16,7 +16,7 @@ export class HomePageEyes extends BaseEyes {
         this.seesDomVisible('[class*="MuiAvatar-root"]')
     }
     getProductsCount() {
-        let count=cy.get('[class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-4 MuiGrid-grid-lg-3 css-etneoa-MuiGrid-root"]').its('length')
+        let count=cy.get('button>img').its('length')
             return count
     }
     seesNewArrivalTextVisible(){

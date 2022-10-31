@@ -502,7 +502,7 @@ export class BaseHands {
     }
 
     clickOnDomContainText(dom: string, text: string) {
-        cy.get(dom, { timeout: 5000 }).contains(text).trigger('click');
+        cy.get(dom, { timeout:25000 }).contains(text).trigger('click');
         return this;
     }
     clickOnDomValueEqualToText(dom: any, text: string) {

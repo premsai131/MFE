@@ -49,51 +49,15 @@ context('Verify the functionlity of the calender micro app', () => {
             cy.log(daysInaMonth.october)
             calenderEyes.seesNumberOfdaysInaMonth(daysInaMonth.october);
         })
-        it.skip('Verify adding of event in month view calender', () => {
+        it('Verify adding of event in month view calender', () => {
             let currentDate = new Date().toJSON().slice(0, 10);
-            var i = 1
-            var flag = false
-            for (let r = 0; r < i; r++) {
-                cy.log("value of " + i)
-                calenderHands.clickOnTodaysDatefield(currentDate)
-                calenderEyes.verifyEventDialog()
-                calenderHands.typeEventName(eventName)
-                calenderHands.setStartTimeas(starttime)
-                calenderHands.setEndTimeas(endtime)
-                cy.intercept({
-                    method: 'GET',
-                    url: 'http://localhost:4000/graphql/'
-                },
-                    {
-                        statusCode: 200,
-                        body: [{
-                            "operationName": "CreateCalenderEvent",
-                            "variables": {
-                                "end": "2022-10-26T19:45:00",
-                                "start": "2022-10-26T18:45:00",
-                                "title": "cypresstest",
-                                "userID": "react_tester"
-                            },
-                            "query": "mutation CreateCalenderEvent($createCalenderEventRequest2: CreateCalenderEventRequest!) {↵  CreateCalenderEvent(request: $createCalenderEventRequest2)}",
-                        }]
-                    }).as('graphqlRequest')
-                    calenderHands.clickOnAddeventButton()
-                cy.wait('@graphqlRequest', { timeout: 80000 })
-                // cy.wait(7000)
-                cy.get('body').then(($body) => {
-                    if ($body.find('[data-date="2022-10-26"] a>[class*="fc-event-title"]').is(':visible')) {
-                        cy.log("it stopped now")
-                        flag = true
-                    }
-                })
-                console.log(flag)
-                cy.log(flag + "flasgg")
-                if (flag) {
-                    cy.log("reached+++++++arsd")
-                    break
-                }
-            }
-            // calenderEyes.seesNewlyAddedEventInMonthView('6:45p', eventName)
+            calenderHands.clickOnTodaysDatefield(currentDate)
+            calenderEyes.verifyEventDialog()
+            calenderHands.typeEventName(eventName)
+            calenderHands.setStartTimeas(starttime)
+            calenderHands.setEndTimeas(endtime)
+            calenderHands.clickOnAddeventButton()
+            calenderEyes.seesNewlyAddedEventInMonthView('6:45p', eventName)
         })
         it('Verify editing of newly added event in month view', () => {
             calenderHands.clickOnNewlyAddedEvent(eventName)
@@ -117,7 +81,7 @@ context('Verify the functionlity of the calender micro app', () => {
     describe('verify weekly view in calender', () => {
         it('verify the UI of weekly view in calender', () => {
             calenderHands.clickOnweekViewButton();
-            calenderEyes.seesLabeltextWithWeeklyDate('Oct 23 – 29, 2022')
+            calenderEyes.seesLabeltextWithWeeklyDate('Oct 30 – Nov 5, 2022')
             calenderEyes.seesDateAndDayTextFortheWeekNotNull()
             calenderEyes.seesAllDayTimeforTheDate()
         })

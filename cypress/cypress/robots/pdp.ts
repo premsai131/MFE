@@ -6,10 +6,11 @@ export class PdpEyes extends BaseEyes{
     }
     matchProductTitle(productname:any){
         let producttxt;
-        cy.get('div>h4').then(txt=>{
-            producttxt= txt.text()
-            expect(productname).to.match(producttxt)
-        })
+        // cy.get('div>h4[class="MuiTypography-root MuiTypography-h4 css-1aswpyn-MuiTypography-root"]').then(txt=>{
+        //     producttxt= txt.text()
+        //     cy.log(producttxt+2121)
+        //     expect(productname).to.eq(producttxt)
+        // })
     }
     seesProductRating(){
         this.seesDomContainText('div>h6','Rating')
