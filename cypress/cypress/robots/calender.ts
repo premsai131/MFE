@@ -98,6 +98,7 @@ export class CalenderHands extends BaseHands {
         this.clickOnDomElement(`[data-date="${currentdate}"]`)
     }
     typeEventName(name: any) {
+        cy.wait(5000)
         this.clearTextFieldDom('[placeholder="Add an event"]')
         this.typeTextOnDom('[placeholder="Add an event"]', name)
     }
