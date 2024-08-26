@@ -86,10 +86,10 @@ jobs:
           cloud_record=${{ github.event.inputs.cloud_record || 'true' }}
     
           if [[ "$cloud_record" == "true" && ("${{ github.event.inputs.environment_name }}" == "production" || "${{ github.event.inputs.environment_name }}" == "prod") ]]; then
-            regions=$(yq e '.regions' .github/workflows/sanity-test-config.yaml)
-            echo "Regions: $regions"
-            default_containers=$(echo "$regions" | jq '[.[] | {workspace_id: .workspace_id, vault_id: .vault_id, display_name: .display_name, run_create_function_test: .run_create_function_test}]')
-            echo "Default Containers: $default_containers"
+           regions=$(yq e -o=json '.regions' .github/workflows/sanity-test-config.yaml)
+           echo "Regions: $regions"
+           default_containers=$(echo "$regions" | jq '[.[] | {workspace_id: .workspace_id, vault_id: .vault_id, display_name: .display_name, run_create_function_test: .run_create_function_test}]')
+           echo "default_containers=$default_containers" >> $GITHUB_OUTPUT
             
           elif [[ "$cloud_record" == "true" || "${{ github.event_name }}" == "schedule" ]]; then
             echo "default_containers=[1, 2, 3, 4, 5]" >> $GITHUB_OUTPUT
