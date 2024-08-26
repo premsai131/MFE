@@ -97,3 +97,17 @@ jobs:
           else
             echo "default_containers=[1]" >> $GITHUB_OUTPUT
           fi
+  dryrun-matrix:
+    needs: calculate-containers-count
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        container: ${{ fromJson(needs.calculate-containers-count.outputs.default_containers) }}
+    steps:
+      - name: Log Matrix Combinations
+        run: |
+          echo "Dry-run: Processing combination:"
+          echo "  Workspace ID: ${{ matrix.container.workspace_id }}"
+          echo "  Vault ID: ${{ matrix.container.vault_id }}"
+          echo "  Display Name: ${{ matrix.container.display_name }}"
+          echo "  Run Create Function Test: ${{ matrix.container.run_create_function_test }}"
