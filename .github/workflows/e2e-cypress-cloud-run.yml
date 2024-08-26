@@ -1,0 +1,99 @@
+name: Run Cypress Cloud E2E Tests
+on:
+  schedule:
+    - cron: '30 21,23 * * 0,1,2,3,4'
+  workflow_dispatch:
+    inputs:
+      environment_name:
+        description: 'Select Environment'
+        type: choice
+        options:
+          - blitzv2
+          - stagev2
+          - sandboxv2
+          - production
+        default: blitzv2
+        required: true
+      test_type:
+        description: 'Select Test Type'
+        type: choice
+        options:
+          - Smoke
+          - Regression
+          - Sanity
+        default: Regression
+        required: true
+      cloud_record:
+        description: 'Cypress cloud record'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+        default: 'true'
+      test_options:
+        description: 'Provide test options in the JSON string'
+        type: string
+        default: '{"parent_account_admin":true,"account_admin":true,"workspace_admin":true,"vault_creator":true,"vault_owner":true,"function_admin":true,"connection_manager":true,"schema_validation":true}'
+      browser:
+        description: 'Select Browser'
+        type: choice
+        options:
+          - chrome
+          - firefox
+          - chromium
+          - edge
+        default: chrome
+
+jobs:
+  determine-environment:
+    runs-on: ubuntu-latest
+    outputs:
+      env_name: ${{ steps.set-default.outputs.env_name }}
+    steps:
+      - name: Set default environment name
+        id: set-default
+        run: |
+          current_hour=$(date +"%H")
+          echo "Hour Now: "$current_hour
+          if [[ "$current_hour" = "21" ]]; then
+            echo "env_name=blitzv2" >> $GITHUB_OUTPUT
+          elif [[ "$current_hour" = "23" ]]; then
+            echo "env_name=stagev2" >> $GITHUB_OUTPUT
+          else
+            echo "env_name=${{ github.event.inputs.environment_name }}" >> $GITHUB_OUTPUT
+          fi
+          echo "Github Output: "$GITHUB_OUTPUT
+
+
+  calculate-containers-count:
+    runs-on: ubuntu-latest
+    outputs:
+      default_containers: ${{ steps.set-default.outputs.default_containers }}
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v3
+    
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+          sudo wget -qO /usr/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/bin/yq
+    
+      - name: Set default containers
+        id: set-default
+        run: |
+          cloud_record=${{ github.event.inputs.cloud_record || 'true' }}
+    
+          if [[ "$cloud_record" == "true" && ("${{ github.event.inputs.environment_name }}" == "production" || "${{ github.event.inputs.environment_name }}" == "prod") ]]; then
+            regions=$(yq e '.regions' .github/workflows/sanity-test-config.yaml)
+            echo "Regions: $regions"
+            default_containers=$(echo "$regions" | jq '[.[] | {workspace_id: .workspace_id, vault_id: .vault_id, display_name: .display_name, run_create_function_test: .run_create_function_test}]')
+            echo "Default Containers: $default_containers"
+            
+          elif [[ "$cloud_record" == "true" || "${{ github.event_name }}" == "schedule" ]]; then
+            echo "default_containers=[1, 2, 3, 4, 5]" >> $GITHUB_OUTPUT
+    
+          else
+            echo "default_containers=[1]" >> $GITHUB_OUTPUT
+          fi
