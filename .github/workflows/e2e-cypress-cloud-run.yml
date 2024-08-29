@@ -111,10 +111,10 @@ jobs:
             \"QUICKSTART_VAULT_ID\": \"${{ matrix.container.vault_id }}\",
             \"WORKSPACE_URL\": \"${{ matrix.container.workspace_url }}\",
             \"REGION_DISPLAY_NAME\": \"${{ matrix.container.display_name }}\"
-          }" > ./cypress/cypress.env.json
+          }" > cypress/cypress.env.json
 
       - name: Print updated cypress.env.json
-        run: cat ./app_test/cypress.env.json
+        run: cat cypress/cypress.env.json
         
       - name: Log Matrix Combinations
         run: |
