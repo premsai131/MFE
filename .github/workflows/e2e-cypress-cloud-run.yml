@@ -54,15 +54,15 @@ jobs:
         id: set-default
         run: |
           current_hour=$(date +"%H")
-          echo "Hour Now: "$current_hour
-          if [[ "$current_hour" = "21" ]]; then
-            echo "env_name=blitzv2" >> $GITHUB_OUTPUT
-          elif [[ "$current_hour" = "23" ]]; then
-            echo "env_name=stagev2" >> $GITHUB_OUTPUT
+          echo "Hour Now: $current_hour"
+          if [ "$current_hour" = "21" ]; then
+            echo "env_name=blitzv2" >> $GITHUB_ENV
+          elif [ "$current_hour" = "23" ]; then
+            echo "env_name=stagev2" >> $GITHUB_ENV
           else
-            echo "env_name=${{ github.event.inputs.environment_name }}" >> $GITHUB_OUTPUT
+            echo "env_name=${{ github.event.inputs.environment_name }}" >> $GITHUB_ENV
           fi
-          echo "Github Output: "$GITHUB_OUTPUT
+          echo "Github Output: ${{ env.env_name }}"
 
 
   calculate-containers-count:
@@ -70,7 +70,7 @@ jobs:
     outputs:
       default_containers: ${{ steps.set-default.outputs.default_containers }}
     steps:
-      - name: checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v3
     
       - name: Install dependencies
@@ -87,14 +87,15 @@ jobs:
             regions=$(cat cypress/sanity-test-config.json)
             echo "Regions: $regions"
             default_containers=$(echo "$regions" | jq -c '[.regions[] | {workspace_id: .workspace_id, vault_id: .vault_id, display_name: .display_name, data_plane_url: .data_plane_url, workspace_url: .workspace_url, run_create_function_tests: .run_create_function_tests}]')
-            echo "default_containers=$default_containers" >> $GITHUB_OUTPUT
+            echo "default_containers=$default_containers" >> $GITHUB_ENV
             
           elif [[ "$cloud_record" == "true" || "${{ github.event_name }}" == "schedule" ]]; then
-            echo "default_containers=[1, 2, 3, 4, 5]" >> $GITHUB_OUTPUT
+            echo "default_containers=[1, 2, 3, 4, 5]" >> $GITHUB_ENV
     
           else
-            echo "default_containers=[1]" >> $GITHUB_OUTPUT
+            echo "default_containers=[1]" >> $GITHUB_ENV
           fi
+
   dryrun-matrix:
     needs: calculate-containers-count
     runs-on: ubuntu-latest
@@ -102,9 +103,15 @@ jobs:
       matrix:
         container: ${{ fromJson(needs.calculate-containers-count.outputs.default_containers) }}
     steps:
+      - name: Check if JSON file exists
+        run: |
+          if [ ! -f cypress/cypress.env.json ]; then
+            echo "File cypress/cypress.env.json does not exist. Creating..."
+            mkdir -p cypress
+          fi
 
       - name: Update cypress.env.json
-        if: ${{ needs.dryrun-matrix.outputs.default_containers != '[]' && github.event.inputs.test_type == 'Sanity' && github.event.inputs.environment_name == 'production' }}
+        if: ${{ needs.calculate-containers-count.outputs.default_containers != '[]' && github.event.inputs.test_type == 'Sanity' && github.event.inputs.environment_name == 'production' }}
         run: |
           echo "{
             \"WORKSPACE_ID\": \"${{ matrix.container.workspace_id }}\",
