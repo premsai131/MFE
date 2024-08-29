@@ -64,7 +64,6 @@ jobs:
           fi
           echo "Github Output: ${{ env.env_name }}"
 
-
   calculate-containers-count:
     runs-on: ubuntu-latest
     outputs:
@@ -103,6 +102,9 @@ jobs:
       matrix:
         container: ${{ fromJson(needs.calculate-containers-count.outputs.default_containers) }}
     steps:
+      - name: Debug output
+        run: echo "Default containers: ${{ needs.calculate-containers-count.outputs.default_containers }}"
+
       - name: Check if JSON file exists
         run: |
           if [ ! -f cypress/cypress.env.json ]; then
