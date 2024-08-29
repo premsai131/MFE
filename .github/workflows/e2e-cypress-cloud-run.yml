@@ -109,17 +109,12 @@ jobs:
 
       - name: Store env as file
         run: |
-          echo "Environment Name: ${{ github.event.inputs.environment_name }}"
-          echo "${GMAIL_CREDENTIALS}" > ./app_test/cypress/plugins/credentials.json
-          echo "${GMAIL_TOKEN}" > ./app_test/cypress/plugins/token.json
           
-          # Fetch the region-specific values from matrix
           region_workspace_id="${{ matrix.containers.workspace_id }}"
           region_vault_id="${{ matrix.containers.vault_id }}"
           region_workspace_url="${{ matrix.containers.workspace_url }}"
           region_display_name="${{ matrix.containers.display_name }}"
           
-          # Update cypress.env.json with region-specific values
           jq --arg workspace_id "$region_workspace_id" \
              --arg vault_id "$region_vault_id" \
              --arg workspace_url "$region_workspace_url" \
