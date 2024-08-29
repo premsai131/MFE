@@ -88,7 +88,7 @@ jobs:
           if [[ "$cloud_record" == "true" && ("${{ github.event.inputs.environment_name }}" == "production" || "${{ github.event.inputs.environment_name }}" == "prod") ]]; then
            regions=$(yq e -o=json '.regions' .github/workflows/sanity-test-config.yaml)
            echo "Regions: $regions"
-           default_containers=$(echo "$regions" | jq -c '[.[] | {workspace_id: .workspace_id, vault_id: .vault_id, display_name: .display_name, run_create_function_test: .run_create_function_test}]')
+           default_containers=$(echo "$regions" | jq -c '[.[] | {workspace_id: .workspace_id, vault_id: .vault_id, display_name: .display_name, run_create_function_tests: .run_create_function_tests}]')
            echo "default_containers=$default_containers" >> $GITHUB_OUTPUT
             
           elif [[ "$cloud_record" == "true" || "${{ github.event_name }}" == "schedule" ]]; then
@@ -106,8 +106,12 @@ jobs:
     steps:
       - name: Log Matrix Combinations
         run: |
+          echo "WORKSPACE_ID: $WORKSPACE_ID (Type: $(echo $WORKSPACE_ID | jq -R 'type'))"
+          echo "QUICKSTART_VAULT_ID: $QUICKSTART_VAULT_ID (Type: $(echo $QUICKSTART_VAULT_ID | jq -R 'type'))"
+          echo "WORKSPACE_URL: $WORKSPACE_URL (Type: $(echo $WORKSPACE_URL | jq -R 'type'))"
+          echo "run_create_function_tests: $run_create_function_tests (Type: $(echo $run_create_function_tests | jq -R 'type'))"
           echo "Dry-run: Processing combination:"
           echo "  Workspace ID: ${{ matrix.container.workspace_id }}"
           echo "  Vault ID: ${{ matrix.container.vault_id }}"
           echo "  Display Name: ${{ matrix.container.display_name }}"
-          echo "  Run Create Function Test: ${{ matrix.container.run_create_function_test }}"
+          echo "  Run Create Function Test: ${{ matrix.container.run_create_function_tests }}"
