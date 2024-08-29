@@ -99,7 +99,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        container: ${{ fromJson(needs.calculate-containers-count.outputs.default_containers) }}
+        containers: ${{ fromJson(needs.calculate-containers-count.outputs.default_containers) }}
     steps:
       - name: Debug Output
         run: |
@@ -107,22 +107,29 @@ jobs:
           echo "Parsed JSON:"
           echo "${{ needs.calculate-containers-count.outputs.default_containers }}" | jq .
 
-      - name: Check if JSON file exists
+      - name: Store env as file
         run: |
-          if [ ! -f cypress/cypress.env.json ]; then
-            echo "File cypress/cypress.env.json does not exist. Creating..."
-            mkdir -p cypress
-          fi
-
-      - name: Update cypress.env.json
-        if: ${{ needs.calculate-containers-count.outputs.default_containers != '[]' && github.event.inputs.test_type == 'Sanity' && github.event.inputs.environment_name == 'production' }}
-        run: |
-          echo "{
-            \"WORKSPACE_ID\": \"${{ matrix.container.workspace_id }}\",
-            \"QUICKSTART_VAULT_ID\": \"${{ matrix.container.vault_id }}\",
-            \"WORKSPACE_URL\": \"${{ matrix.container.workspace_url }}\",
-            \"REGION_DISPLAY_NAME\": \"${{ matrix.container.display_name }}\"
-          }" > cypress/cypress.env.json
+          echo "Environment Name: ${{ github.event.inputs.environment_name }}"
+          echo "${GMAIL_CREDENTIALS}" > ./app_test/cypress/plugins/credentials.json
+          echo "${GMAIL_TOKEN}" > ./app_test/cypress/plugins/token.json
+          
+          # Fetch the region-specific values from matrix
+          region_workspace_id="${{ matrix.containers.workspace_id }}"
+          region_vault_id="${{ matrix.containers.vault_id }}"
+          region_workspace_url="${{ matrix.containers.workspace_url }}"
+          region_display_name="${{ matrix.containers.display_name }}"
+          
+          # Update cypress.env.json with region-specific values
+          jq --arg workspace_id "$region_workspace_id" \
+             --arg vault_id "$region_vault_id" \
+             --arg workspace_url "$region_workspace_url" \
+             --arg display_name "$region_display_name" \
+             '.APP_URL = ($workspace_url + "/app") | 
+              .WORKSPACE_ID = $workspace_id | 
+              .QUICKSTART_VAULT_ID = $vault_id | 
+              .WORKSPACE_URL = $workspace_url | 
+              .REGION_DISPLAY_NAME = $display_name' \
+             ./cypress/cypress.env.json > ./cypress/cypress.env.json.tmp && mv ./cypress/cypress.env.json.tmp ./cypress/cypress.env.json
 
       - name: Print updated cypress.env.json
         run: cat cypress/cypress.env.json
@@ -134,7 +141,7 @@ jobs:
           echo "WORKSPACE_URL: $WORKSPACE_URL (Type: $(echo $WORKSPACE_URL | jq -R 'type'))"
           echo "run_create_function_tests: $run_create_function_tests (Type: $(echo $run_create_function_tests | jq -R 'type'))"
           echo "Dry-run: Processing combination:"
-          echo "  Workspace ID: ${{ matrix.container.workspace_id }}"
-          echo "  Vault ID: ${{ matrix.container.vault_id }}"
-          echo "  Display Name: ${{ matrix.container.display_name }}"
-          echo "  Run Create Function Test: ${{ matrix.container.run_create_function_tests }}"
+          echo "  Workspace ID: ${{ matrix.containers.workspace_id }}"
+          echo "  Vault ID: ${{ matrix.containers.vault_id }}"
+          echo "  Display Name: ${{ matrix.containers.display_name }}"
+          echo "  Run Create Function Test: ${{ matrix.containers.run_create_function_tests }}"
