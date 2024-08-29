@@ -102,6 +102,20 @@ jobs:
       matrix:
         container: ${{ fromJson(needs.calculate-containers-count.outputs.default_containers) }}
     steps:
+
+     - name: Update cypress.env.json
+       if: ${{ needs.dryrun-matrix.outputs.default_containers != '[]' && github.event.inputs.test_type == 'Sanity' && github.event.inputs.environment_name == 'production' }}
+       run: |
+          echo "{
+            \"WORKSPACE_ID\": \"${{ matrix.container.workspace_id }}\",
+            \"QUICKSTART_VAULT_ID\": \"${{ matrix.container.vault_id }}\",
+            \"WORKSPACE_URL\": \"${{ matrix.container.workspace_url }}\",
+            \"REGION_DISPLAY_NAME\": \"${{ matrix.container.display_name }}\"
+          }" > ./cypress/cypress.env.json
+
+      - name: Print updated cypress.env.json
+        run: cat ./app_test/cypress.env.json
+        
       - name: Log Matrix Combinations
         run: |
           echo "WORKSPACE_ID: $WORKSPACE_ID (Type: $(echo $WORKSPACE_ID | jq -R 'type'))"
