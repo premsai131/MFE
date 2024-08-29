@@ -1,4 +1,5 @@
 name: Run Cypress Cloud E2E Tests
+
 on:
   schedule:
     - cron: '30 21,23 * * 0,1,2,3,4'
@@ -63,12 +64,13 @@ jobs:
             echo "env_name=${{ github.event.inputs.environment_name }}" >> $GITHUB_OUTPUT
           fi
           echo "Github Output: "$GITHUB_OUTPUT
+
   calculate-containers-count:
     runs-on: ubuntu-latest
     outputs:
       default_containers: ${{ steps.set-default.outputs.default_containers }}
     steps:
-      - name: checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v3
     
       - name: Install dependencies
@@ -94,3 +96,38 @@ jobs:
             echo "default_containers=[1]" >> $GITHUB_OUTPUT
           fi
           echo "Final Default Containers: $default_containers"
+
+  modify-cypress-env:
+    needs: calculate-containers-count
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        containers: ${{ fromJson(needs.calculate-containers-count.outputs.default_containers) }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Store env as file
+        run: |
+          region_workspace_id="${{ matrix.containers.workspace_id }}"
+          region_vault_id="${{ matrix.containers.vault_id }}"
+          region_workspace_url="${{ matrix.containers.workspace_url }}"
+          region_display_name="${{ matrix.containers.display_name }}"
+          
+          jq --arg workspace_id "$region_workspace_id" \
+             --arg vault_id "$region_vault_id" \
+             --arg workspace_url "$region_workspace_url" \
+             --arg display_name "$region_display_name" \
+             '.APP_URL = ($workspace_url + "/app") | 
+              .WORKSPACE_ID = $workspace_id | 
+              .QUICKSTART_VAULT_ID = $vault_id | 
+              .WORKSPACE_URL = $workspace_url | 
+              .REGION_DISPLAY_NAME = $display_name' \
+             ./cypress/cypress.env.json > ./cypress/cypress.env.json.tmp
+
+          mv ./cypress/cypress.env.json.tmp ./cypress/cypress.env.json
+
+      - name: Print Cypress Env Values
+        run: |
+          echo "Cypress env values:"
+          jq '.' ./cypress/cypress.env.json
