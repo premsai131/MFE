@@ -1,5 +1,4 @@
 name: Run Cypress Cloud E2E Tests
-
 on:
   schedule:
     - cron: '30 21,23 * * 0,1,2,3,4'
@@ -46,48 +45,52 @@ on:
         default: chrome
 
 jobs:
+  determine-environment:
+    runs-on: ubuntu-latest
+    outputs:
+      env_name: ${{ steps.set-default.outputs.env_name }}
+    steps:
+      - name: Set default environment name
+        id: set-default
+        run: |
+          current_hour=$(date +"%H")
+          echo "Hour Now: "$current_hour
+          if [[ "$current_hour" = "21" ]]; then
+            echo "env_name=blitzv2" >> $GITHUB_OUTPUT
+          elif [[ "$current_hour" = "23" ]]; then
+            echo "env_name=stagev2" >> $GITHUB_OUTPUT
+          else
+            echo "env_name=${{ github.event.inputs.environment_name }}" >> $GITHUB_OUTPUT
+          fi
+          echo "Github Output: "$GITHUB_OUTPUT
   calculate-containers-count:
     runs-on: ubuntu-latest
     outputs:
       default_containers: ${{ steps.set-default.outputs.default_containers }}
     steps:
-      - name: Checkout repository
+      - name: checkout repository
         uses: actions/checkout@v3
-
+    
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y jq
-
+    
       - name: Set default containers
         id: set-default
         run: |
-          cloud_record="${{ github.event.inputs.cloud_record || 'true' }}"
-          environment_name="${{ github.event.inputs.environment_name }}"
-
-          if [[ "$cloud_record" == "true" && ("$environment_name" == "production" || "$environment_name" == "prod") ]]; then
+          cloud_record=${{ github.event.inputs.cloud_record || 'true' }}
+    
+          if [[ "$cloud_record" == "true" && ("${{ github.event.inputs.environment_name }}" == "production" || "${{ github.event.inputs.environment_name }}" == "prod") ]]; then
             regions=$(cat cypress/sanity-test-config.json)
             echo "Regions: $regions"
             default_containers=$(echo "$regions" | jq -c '[.regions[] | {workspace_id: .workspace_id, vault_id: .vault_id, display_name: .display_name, data_plane_url: .data_plane_url, workspace_url: .workspace_url, run_create_function_tests: .run_create_function_tests}]')
-            echo "default_containers=$default_containers" >> $GITHUB_ENV
-
+            echo "default_containers=$default_containers" >> $GITHUB_OUTPUT
+            
           elif [[ "$cloud_record" == "true" || "${{ github.event_name }}" == "schedule" ]]; then
-            echo "default_containers=[1, 2, 3, 4, 5]" >> $GITHUB_ENV
+            echo "default_containers=[1, 2, 3, 4, 5]" >> $GITHUB_OUTPUT
+    
           else
-            echo "default_containers=[1]" >> $GITHUB_ENV
-
-          # Debugging output
+            echo "default_containers=[1]" >> $GITHUB_OUTPUT
+          fi
           echo "Final Default Containers: $default_containers"
-
-  dryrun-matrix:
-    needs: calculate-containers-count
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        containers: ${{ fromJson(needs.calculate-containers-count.outputs.default_containers) }}
-    steps:
-      - name: Debug Output
-        run: |
-          echo "Default containers JSON: ${{ needs.calculate-containers-count.outputs.default_containers }}"
-          echo "Parsed JSON:"
-          echo "${{ needs.calculate-containers-count.outputs.default_containers }}" | jq .
