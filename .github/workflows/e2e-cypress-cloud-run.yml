@@ -109,12 +109,13 @@ jobs:
 
       - name: Store env as file
         run: |
-          
+          # Fetch the region-specific values from the matrix
           region_workspace_id="${{ matrix.containers.workspace_id }}"
           region_vault_id="${{ matrix.containers.vault_id }}"
           region_workspace_url="${{ matrix.containers.workspace_url }}"
           region_display_name="${{ matrix.containers.display_name }}"
           
+          # Update cypress.env.json with region-specific values
           jq --arg workspace_id "$region_workspace_id" \
              --arg vault_id "$region_vault_id" \
              --arg workspace_url "$region_workspace_url" \
@@ -124,7 +125,9 @@ jobs:
               .QUICKSTART_VAULT_ID = $vault_id | 
               .WORKSPACE_URL = $workspace_url | 
               .REGION_DISPLAY_NAME = $display_name' \
-             ./cypress/cypress.env.json > ./cypress/cypress.env.json.tmp && mv ./cypress/cypress.env.json.tmp ./cypress/cypress.env.json
+             ./cypress/cypress.env.json > ./cypress/cypress.env.json.tmp && \
+          mv ./cypress/cypress.env.json.tmp ./cypress/cypress.env.json
+
 
       - name: Print updated cypress.env.json
         run: cat cypress/cypress.env.json
