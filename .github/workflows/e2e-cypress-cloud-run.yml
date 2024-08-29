@@ -62,10 +62,10 @@ jobs:
           else
             echo "env_name=${{ github.event.inputs.environment_name }}" >> $GITHUB_ENV
           fi
-          echo "Github Output: ${{ env.env_name }}"
 
   calculate-containers-count:
     runs-on: ubuntu-latest
+    needs: determine-environment
     outputs:
       default_containers: ${{ steps.set-default.outputs.default_containers }}
     steps:
@@ -80,9 +80,10 @@ jobs:
       - name: Set default containers
         id: set-default
         run: |
-          cloud_record=${{ github.event.inputs.cloud_record || 'true' }}
+          cloud_record=${{ github.event.inputs.cloud_record }}
+          environment_name=${{ needs.determine-environment.outputs.env_name }}
     
-          if [[ "$cloud_record" == "true" && ("${{ github.event.inputs.environment_name }}" == "production" || "${{ github.event.inputs.environment_name }}" == "prod") ]]; then
+          if [[ "$cloud_record" == "true" && ( "$environment_name" == "production" || "$environment_name" == "prod" ) ]]; then
             regions=$(cat cypress/sanity-test-config.json)
             echo "Regions: $regions"
             default_containers=$(echo "$regions" | jq -c '[.regions[] | {workspace_id: .workspace_id, vault_id: .vault_id, display_name: .display_name, data_plane_url: .data_plane_url, workspace_url: .workspace_url, run_create_function_tests: .run_create_function_tests}]')
@@ -106,7 +107,7 @@ jobs:
           echo "Default containers JSON: ${{ needs.calculate-containers-count.outputs.default_containers }}"
           echo "Parsed JSON:"
           echo "${{ needs.calculate-containers-count.outputs.default_containers }}" | jq .
-
+          
       - name: Store env as file
         run: |
           # Fetch the region-specific values from the matrix
@@ -127,8 +128,7 @@ jobs:
               .REGION_DISPLAY_NAME = $display_name' \
              ./cypress/cypress.env.json > ./cypress/cypress.env.json.tmp && \
           mv ./cypress/cypress.env.json.tmp ./cypress/cypress.env.json
-
-
+          
       - name: Print updated cypress.env.json
         run: cat cypress/cypress.env.json
         
