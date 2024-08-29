@@ -93,7 +93,6 @@ jobs:
     
           else
             echo "default_containers=[1]" >> $GITHUB_ENV
-          fi
 
   dryrun-matrix:
     needs: calculate-containers-count
@@ -102,8 +101,11 @@ jobs:
       matrix:
         container: ${{ fromJson(needs.calculate-containers-count.outputs.default_containers) }}
     steps:
-      - name: Debug output
-        run: echo "Default containers: ${{ needs.calculate-containers-count.outputs.default_containers }}"
+      - name: Debug Output
+        run: |
+          echo "Default containers JSON: ${{ needs.calculate-containers-count.outputs.default_containers }}"
+          echo "Parsed JSON:"
+          echo "${{ needs.calculate-containers-count.outputs.default_containers }}" | jq .
 
       - name: Check if JSON file exists
         run: |
