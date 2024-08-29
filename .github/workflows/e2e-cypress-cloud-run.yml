@@ -128,13 +128,7 @@ jobs:
               .REGION_DISPLAY_NAME = $display_name' \
              ./cypress/cypress.env.json > ./cypress/cypress.env.json.tmp
 
-          # Ensure that the mv command is executed only if the jq command is successful
-          if [ $? -eq 0 ]; then
-            mv ./cypress/cypress.env.json.tmp ./cypress/cypress.env.json
-          else
-            echo "Failed to update cypress.env.json"
-            exit 1
-          fi
+          mv ./cypress/cypress.env.json.tmp ./cypress/cypress.env.json
 
       - name: Print updated cypress.env.json
         run: cat cypress/cypress.env.json
