@@ -77,8 +77,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y jq
-          sudo wget -qO /usr/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-          sudo chmod +x /usr/bin/yq
     
       - name: Set default containers
         id: set-default
@@ -86,10 +84,10 @@ jobs:
           cloud_record=${{ github.event.inputs.cloud_record || 'true' }}
     
           if [[ "$cloud_record" == "true" && ("${{ github.event.inputs.environment_name }}" == "production" || "${{ github.event.inputs.environment_name }}" == "prod") ]]; then
-           regions=$(yq e -o=json '.regions' .github/workflows/sanity-test-config.yaml)
-           echo "Regions: $regions"
-           default_containers=$(echo "$regions" | jq -c '[.[] | {workspace_id: .workspace_id, vault_id: .vault_id, display_name: .display_name, run_create_function_tests: .run_create_function_tests}]')
-           echo "default_containers=$default_containers" >> $GITHUB_OUTPUT
+            regions=$(cat cypress/sanity-test-config.json)
+            echo "Regions: $regions"
+            default_containers=$(echo "$regions" | jq -c '[.regions[] | {workspace_id: .workspace_id, vault_id: .vault_id, display_name: .display_name, data_plane_url: .data_plane_url, workspace_url: .workspace_url, run_create_function_tests: .run_create_function_tests}]')
+            echo "default_containers=$default_containers" >> $GITHUB_OUTPUT
             
           elif [[ "$cloud_record" == "true" || "${{ github.event_name }}" == "schedule" ]]; then
             echo "default_containers=[1, 2, 3, 4, 5]" >> $GITHUB_OUTPUT
