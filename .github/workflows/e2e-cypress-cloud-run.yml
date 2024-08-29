@@ -103,9 +103,9 @@ jobs:
         container: ${{ fromJson(needs.calculate-containers-count.outputs.default_containers) }}
     steps:
 
-     - name: Update cypress.env.json
-       if: ${{ needs.dryrun-matrix.outputs.default_containers != '[]' && github.event.inputs.test_type == 'Sanity' && github.event.inputs.environment_name == 'production' }}
-       run: |
+      - name: Update cypress.env.json
+        if: ${{ needs.dryrun-matrix.outputs.default_containers != '[]' && github.event.inputs.test_type == 'Sanity' && github.event.inputs.environment_name == 'production' }}
+        run: |
           echo "{
             \"WORKSPACE_ID\": \"${{ matrix.container.workspace_id }}\",
             \"QUICKSTART_VAULT_ID\": \"${{ matrix.container.vault_id }}\",
