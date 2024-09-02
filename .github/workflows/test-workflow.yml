@@ -52,7 +52,7 @@ jobs:
           exit 1
           
       - name: Trigger cypress regression tests 
-        if: ${{ env.release_env == 'sandbox' && env.dry-run == 'false' && steps.sanity-tests-cypress-status.result == 'failure' }}
+        if: ${{ env.release_env == 'sandbox' && env.dry-run == 'false' }}
         run: |
           echo "Would trigger regression tests in cypress"
           echo "Environment name: sandboxv2"
