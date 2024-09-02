@@ -49,7 +49,7 @@ jobs:
         run: |
           echo "Would monitor sanity tests of cypress"
           echo "Checking status of workflow for repo: ${{ env.studio-ui-repo }}"
-          exit 1
+          exit 0
           
       - name: Trigger cypress regression tests 
         if: ${{ github.event.inputs.release_env == 'sandbox' && github.event.inputs['dry-run'] == 'false' && steps.sanity-tests-cypress-status.conclusion == 'success' }}
