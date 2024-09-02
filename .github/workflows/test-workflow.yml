@@ -1,0 +1,37 @@
+name: Test Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      trigger_failure:
+        description: 'Trigger a failure in the workflow'
+        required: true
+        default: 'false'
+
+jobs:
+  check-failure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Current Repository
+        uses: actions/checkout@v3
+
+      - name: Set Environment Variable
+        run: echo "TRIGGER_FAILURE=${{ github.event.inputs.trigger_failure }}" >> $GITHUB_ENV
+
+      - name: Simulate Failure
+        if: ${{ env.TRIGGER_FAILURE == 'true' }}
+        run: exit 1
+
+      - name: Print Message
+        run: echo "Workflow succeeded or failed based on input."
+
+  dependent-job:
+    runs-on: ubuntu-latest
+    needs: check-failure
+    if: ${{ success() }}
+    steps:
+      - name: Checkout Current Repository
+        uses: actions/checkout@v3
+
+      - name: Print Dependent Job Message
+        run: echo "Dependent job ran successfully."
