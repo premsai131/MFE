@@ -41,7 +41,7 @@ jobs:
           echo "TRIGGER_FAILURE=${{ github.event.inputs.trigger_failure }}" >> $GITHUB_ENV
           echo "Would trigger sanity tests in cypress cloud"
           echo "Using environment: ${{ env.envname }}"
-          echo "Using environment: ${{ env.TRIGGER_FAILURE }}"
+          echo "Using environment: ${{ github.event.inputs.trigger_failure }}"
 
       - name: Monitor sanity tests of cypress
         if: ${{ (env.release_env == 'sandbox' || env.release_env == 'prod') && env.dry-run == 'false' && env.TRIGGER_FAILURE == 'true'}}
