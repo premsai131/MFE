@@ -44,7 +44,7 @@ jobs:
           echo "Using environment: ${{ github.event.inputs.trigger_failure }}"
 
       - name: Monitor sanity tests of cypress
-        if: ${{ (env.release_env == 'sandbox' || env.release_env == 'prod') && env.dry-run == 'false' && env.TRIGGER_FAILURE == 'true'}}
+        if: ${{ (env.release_env == 'sandbox' || env.release_env == 'prod') && env.dry-run == 'false' && github.event.inputs.trigger_failure == 'true'}}
         id: sanity-tests-cypress-status
         run: |
           echo "Would monitor sanity tests of cypress"
