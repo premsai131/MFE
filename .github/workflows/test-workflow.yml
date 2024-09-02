@@ -52,14 +52,14 @@ jobs:
           exit 0
           
       - name: Trigger cypress regression tests 
-        if: ${{ github.event.inputs.release_env == 'sandbox' && github.event.inputs['dry-run'] == 'false' && steps.sanity-tests-cypress-status.conclusion == 'success' }}
+        if: ${{ env.release_env == 'sandbox' && env.dry-run == 'false' && steps.sanity-tests-cypress-status.conclusion == 'success' }}
         run: |
           echo "Would trigger regression tests in cypress"
           echo "Environment name: sandboxv2"
 
 
       - name: Validate status of cypress github workflows
-        if: ${{ github.event.inputs.release_env == 'sandbox' && github.event.inputs['dry-run'] == 'false' }}
+        if: ${{ env.release_env == 'sandbox' && env.dry-run == 'false' }}
         run: |
           echo "Would validate status of cypress GitHub workflows"
           echo "Repo: ${{ env.studio-ui-repo }}"
