@@ -33,10 +33,10 @@ jobs:
       - name: Check for core folder changes
         id: check_core_folder_changes
         run: |
-          if grep -q -E '^app_test/|^cypress/' changed_files.txt; then
-            echo "core_folder_changes=false" >> $GITHUB_OUTPUT
-          else
+          if grep -qEv '^app_test/|^cypress/' changed_files.txt; then
             echo "core_folder_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "core_folder_changes=false" >> $GITHUB_OUTPUT
           fi
           if grep -q '^app/' changed_files.txt; then
              echo "changes_in_app=true" >> $GITHUB_OUTPUT
