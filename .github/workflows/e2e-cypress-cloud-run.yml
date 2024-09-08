@@ -59,6 +59,7 @@ jobs:
     needs: [make-tag, build-app, build-beffe, build-data-beffe,check-codebase-changes]
     if: ${{ needs.check-codebase-changes.outputs.changes_in_app == 'true' || needs.check-codebase-changes.outputs.changes_in_beffe == 'true' }}
     run: echo "run-cypress-karate-smoke-tests running"
+    steps:
       - name: Check Cypress test results
         id: check_cypress_results
         if: ${{ (failure() || success()) && needs.check-codebase-changes.outputs.changes_in_app == 'true' }}
