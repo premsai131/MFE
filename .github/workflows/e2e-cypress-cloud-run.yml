@@ -48,6 +48,11 @@ jobs:
           else
              echo "changes_in_beffe=false" >> $GITHUB_OUTPUT
           fi
+      - name: Debug Outputs
+        run: |
+           echo "core_folder_changes=${{ steps.check_core_folder_changes.outputs.core_folder_changes }}"
+           echo "changes_in_app=${{ steps.check_core_folder_changes.outputs.changes_in_app }}"
+           echo "changes_in_beffe=${{ steps.check_core_folder_changes.outputs.changes_in_beffe }}"
 
   build-app:
     runs-on: ubuntu-latest
