@@ -33,9 +33,21 @@ jobs:
       - name: Check for core folder changes
         id: check_core_folder_changes
         run: |
-          echo "core_folder_changes=$(if grep -qE '^(?!app_test/|cypress/)' changed_files.txt; then echo true; else echo false; fi)" >> $GITHUB_ENV
-          echo "changes_in_app=$(if grep -q '^app/' changed_files.txt; then echo true; else echo false; fi)" >> $GITHUB_ENV
-          echo "changes_in_beffe=$(if grep -qE '^cypress/|^vault-beffe/' changed_files.txt; then echo true; else echo false; fi)" >> $GITHUB_ENV
+          if grep -qE '^(?!app_test/|cypress/)' changed_files.txt; then
+            echo "core_folder_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "core_folder_changes=false" >> $GITHUB_OUTPUT
+          fi
+          if grep -q '^app/' changed_files.txt; then
+             echo "changes_in_app=true" >> $GITHUB_OUTPUT
+          else
+             echo "changes_in_app=false" >> $GITHUB_OUTPUT
+          fi
+          if grep -qE '^cypress/|^vault-beffe/' changed_files.txt; then
+             echo "changes_in_beffe=true" >> $GITHUB_OUTPUT
+          else
+             echo "changes_in_beffe=false" >> $GITHUB_OUTPUT
+          fi
 
   build-app:
     runs-on: ubuntu-latest
