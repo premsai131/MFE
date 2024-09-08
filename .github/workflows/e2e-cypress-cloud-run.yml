@@ -26,7 +26,7 @@ jobs:
         run: |
           MERGE_COMMIT=$GITHUB_SHA
           PREVIOUS_COMMIT=$PREVIOUS_COMMIT
-          CHANGED_FILES=$(git diff --name-only $PREVIOUS_COMMIT $MERGE_COMMIT)
+          git diff --name-only $PREVIOUS_COMMIT $MERGE_COMMIT > changed_files.txt
           ls -l changed_files.txt
           cat changed_files.txt
 
