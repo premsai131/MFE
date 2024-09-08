@@ -22,6 +22,7 @@ jobs:
         run: |
           git fetch origin master
           git diff --name-only origin/master...HEAD > changed_files.txt
+          ls -l changed_files.txt
           cat changed_files.txt
 
       - name: Check for core folder changes
