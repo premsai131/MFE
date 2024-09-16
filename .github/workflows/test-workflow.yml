@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     permissions:
@@ -42,3 +42,4 @@ jobs:
         uses: actions/deploy-pages@v2
         with:
           artifact_name: ${{ env.DEPLOY_PATH }}
+
