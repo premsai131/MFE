@@ -37,7 +37,8 @@ jobs:
       - name: Create temp directory for artifact
         run: |
           mkdir -p artifact-dir
-          cp index.html artifact-dir/
+          cp index1.html artifact-dir/
+          cp index2.html artifact-dir/
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
