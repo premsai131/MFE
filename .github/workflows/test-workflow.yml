@@ -21,7 +21,7 @@ jobs:
 
       - name: Set Environment and Timestamp
         run: |
-          ENV_NAME= "dev"
+          ENV_NAME="dev"
           TIMESTAMP=$(date +%s)
           DEPLOY_PATH="${ENV_NAME}/reports-${TIMESTAMP}"
           echo "DEPLOY_PATH=$DEPLOY_PATH" >> $GITHUB_ENV
