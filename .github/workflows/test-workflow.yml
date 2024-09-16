@@ -4,7 +4,7 @@ name: Deploy static content to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["test"]
+    branches: ["master"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -38,7 +38,6 @@ jobs:
         run: |
           mkdir -p artifact-dir
           cp index1.html artifact-dir/
-          cp index2.html artifact-dir/
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
