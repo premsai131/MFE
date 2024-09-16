@@ -2,7 +2,7 @@ name: blitz-deploy
 
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 jobs:
   check-codebase-changes:

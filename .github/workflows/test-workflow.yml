@@ -3,7 +3,7 @@ name: Deploy HTML files to GitHub Pages
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
 
 jobs:
@@ -35,5 +35,6 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v2
         with:
-          branch: gh-pages
-          folder: $DEPLOY_PATH
+          folder: $DEPLOY_PATH  # Directly deploy the generated directory
+        env:
+          DEPLOY_PATH: ${{ env.DEPLOY_PATH }}
