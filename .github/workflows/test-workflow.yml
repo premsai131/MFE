@@ -34,7 +34,7 @@ jobs:
       - name: Create deployment directory
         run: |
           mkdir -p deployment
-          cp index1.html deployment/
+          cp index2.html deployment/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
