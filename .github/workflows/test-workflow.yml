@@ -1,65 +1,39 @@
-name: Test Workflow
+name: Deploy HTML files to GitHub Pages
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
-    inputs:
-      release_env:
-        description: 'Environment to run the tests' 
-        required: true
-        default: 'sandbox'
-      dryRun:
-        description: 'Set to true to skip actual execution'
-        required: true
-        default: 'false'
-      trigger_failure:
-        type: choice
-        options:
-           - true
-           - false
-
-env:
-  release_env: ${{ inputs.release_env }}
-  dry-run: ${{ inputs.dryRun }}
 
 jobs:
-  test-logic:
+  deploy:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
     steps:
-      - name: Checkout current repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set Environment Name
-        if: ${{ (env.release_env == 'sandbox' || env.release_env == 'prod') && env.dry-run == 'false' }}
+      - name: Set Environment and Timestamp
         run: |
-          echo "envname=$([[ ${{ env.release_env }} == 'sandbox' ]] && echo 'sandboxv2' || echo 'production')" >> $GITHUB_ENV
-          echo "Environment name set to ${{ env.envname }}"
+          ENV_NAME= "dev"
+          TIMESTAMP=$(date +%s)
+          DEPLOY_PATH="${ENV_NAME}/reports-${TIMESTAMP}"
+          echo "DEPLOY_PATH=$DEPLOY_PATH" >> $GITHUB_ENV
 
-      - name: Trigger sanity tests in cypress cloud
-        if: ${{ (env.release_env == 'sandbox' || env.release_env == 'prod') && env.dry-run == 'false' }}
+      - name: Prepare HTML files for deployment
         run: |
-          echo "TRIGGER_FAILURE=${{ github.event.inputs.trigger_failure }}" >> $GITHUB_ENV
-          echo "Would trigger sanity tests in cypress cloud"
-          echo "Using environment: ${{ env.envname }}"
-          echo "Using environment: ${{ github.event.inputs.trigger_failure }}"
+          mkdir -p $DEPLOY_PATH
+          cp index.html $DEPLOY_PATH/
+          cp index2.html $DEPLOY_PATH/
 
-      - name: Monitor sanity tests of cypress
-        if: ${{ (env.release_env == 'sandbox' || env.release_env == 'prod') && env.dry-run == 'false'}}
-        id: sanity-tests-cypress-status
-        run: |
-          echo "Would monitor sanity tests of cypress"
-          echo "Checking status of workflow for repo: ${{ env.studio-ui-repo }}"
-          exit 1
-          
-      - name: Trigger cypress regression tests 
-        if: ${{ env.release_env == 'sandbox' && env.dry-run == 'false'  && ( success() || failure() ) }}
-        run: |
-          echo "Would trigger regression tests in cypress"
-          echo "Environment name: sandboxv2"
-
-
-      - name: Validate status of cypress github workflows
-        if: ${{ env.release_env == 'sandbox' && env.dry-run == 'false' }}
-        run: |
-          echo "Would validate status of cypress GitHub workflows"
-          echo "Repo: ${{ env.studio-ui-repo }}"
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v2
+        with:
+          branch: gh-pages
+          folder: $DEPLOY_PATH
