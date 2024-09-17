@@ -42,11 +42,6 @@ jobs:
           cp -r zr/ deployment/github-pages
           echo "deployment_path=deployment/github-pages" >> $GITHUB_ENV
 
-      - name: List files after creating new deployment directory
-        run: |
-          echo "Files in deployment/github-pages after copying new files:"
-          ls -R deployment/github-pages || echo "No files found"
-
       - name: Upload artifact
         if: success() || failure()
         uses: actions/upload-pages-artifact@v3
@@ -65,3 +60,14 @@ jobs:
         uses: actions/deploy-pages@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+
+  test-slack-notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compile and Run SlackNotification
+        run: |
+          javac SlackNotification.java
+          java SlackNotification "Deployment URL: ${{ steps.deploy.outputs.page_url }}" "Test Type: ${{ github.event.inputs.test_type }}" "Environment: ${{ needs.prepare-deployment.outputs.deployment_path }}" "Timestamp: ${{ github.run_id }}"
