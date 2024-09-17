@@ -1,73 +1,45 @@
-name: Deploy static content to Pages
+name: Run Karate Tests and Notify Slack
 
 on:
-  push:
-    branches: ["main"]
   workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+    inputs:
+      environment_name:
+        description: 'Select Environment'
+        type: choice
+        options:
+          - blitzv2
+          - stagev2
+          - sandboxv2
+        default: blitzv2
+        required: true
+      test_type:
+        description: 'Select Test Type'
+        type: choice
+        options:
+          - regression
+          - smoke
+        default: regression
+        required: true
 
 jobs:
-  prepare-deployment:
+  run-tests:
     runs-on: ubuntu-latest
-    outputs:
-      deployment_path: ${{ steps.prepare.outputs.deployment_path }}
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: List current files in deployment directory
+      - name: Set environment variables
         run: |
-          echo "Listing files in current deployment/github-pages:"
-          ls -R deployment/github-pages || echo "No files found"
+          echo "DEPLOYMENT_URL=https://example.com/deployment-url" >> $GITHUB_ENV
+          echo "TEST_TYPE=${{ github.event.inputs.test_type }}" >> $GITHUB_ENV
+          echo "ENVIRONMENT=${{ github.event.inputs.environment_name }}" >> $GITHUB_ENV
+          echo "TIMESTAMP=$(date +"%Y%m%d%H%M%S")" >> $GITHUB_ENV
 
-      - name: Clear old deployment
+      - name: Run Karate tests
+        run: echo "Simulating Karate test run... (No actual tests in this example)"
+
+      - name: Send Slack Notification
         run: |
-          rm -rf deployment
+          mvn compile exec:java -Dexec.mainClass=com.intuit.karate.junit5.SlackNotification \
+          -Dexec.args="Deployment URL: ${{ env.DEPLOYMENT_URL }} Test Type: ${{ env.TEST_TYPE }} Environment: ${{ env.ENVIRONMENT }} Timestamp: ${{ env.TIMESTAMP }}"
 
-      - name: Create deployment directory
-        id: prepare
-        run: |
-          mkdir -p deployment/github-pages
-          cp -r zr/ deployment/github-pages
-          echo "deployment_path=deployment/github-pages" >> $GITHUB_ENV
-
-      - name: Upload artifact
-        if: success() || failure()
-        uses: actions/upload-pages-artifact@v3
-        with:
-          name: github-pages
-          path: ${{ env.deployment_path }}
-          retention-days: 1
-
-  deploy-to-github-pages:
-    needs: prepare-deployment
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        if: success() || failure()
-        id: deploy
-        uses: actions/deploy-pages@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-  test-slack-notification:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Compile and Run SlackNotification
-        run: |
-          javac SlackNotification.java
-          java SlackNotification "Deployment URL: ${{ steps.deploy.outputs.page_url }}" "Test Type: ${{ github.event.inputs.test_type }}" "Environment: ${{ needs.prepare-deployment.outputs.deployment_path }}" "Timestamp: ${{ github.run_id }}"
