@@ -68,4 +68,4 @@ jobs:
 
       - name: Log Deployment URL
         if: success() || failure()
-        run: echo "Deployment URL: ${{ job.environment.url }}"
+        run: echo ${{ job.environment.url }}
