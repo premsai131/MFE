@@ -1,0 +1,36 @@
+name: Deploy and Track Deployments
+
+on:
+  push:
+    branches: ["master"]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create deployment directory
+        run: |
+          mkdir -p deployment/github-pages
+          echo "Deploying to: deployment/github-pages/$(date +%Y%m%d%H%M%S)"
+          # Copy your deployment files here
+
+      - name: Update deployments manifest
+        run: |
+          if [ ! -f deployments.json ]; then
+            echo "[]" > deployments.json
+          fi
+          timestamp=$(date +%Y%m%d%H%M%S)
+          jq '. += [{"deployment": "github-pages", "timestamp": "'$timestamp'"}]' deployments.json > temp.json
+          mv temp.json deployments.json
+
+      - name: Commit and push updated manifest
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions"
+          git add deployments.json
+          git commit -m "Add deployment entry for $timestamp"
+          git push
