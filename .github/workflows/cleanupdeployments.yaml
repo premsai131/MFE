@@ -1,0 +1,27 @@
+name: Cleanup Old Deployments
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs every day at midnight
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cleanup Old Deployments
+        run: |
+          for env in dev github-pages; do
+            deployments=$(ls -dt deployment/$env/*/)
+            count=0
+            for dir in $deployments; do
+              count=$((count+1))
+              if [ $count -gt 10 ]; then
+                echo "Deleting old deployment: $dir"
+                rm -rf $dir
+              fi
+            done
+          done
