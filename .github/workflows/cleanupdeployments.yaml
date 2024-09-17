@@ -15,7 +15,7 @@ jobs:
       - name: Cleanup Old Deployments
         run: |
           for env in github-pages dev; do
-            deployments=$(ls -dt deployment/$env/*/)
+            deployments=$(ls -dt deployment/$env/*)
             count=0
             for dir in $deployments; do
               count=$((count+1))
