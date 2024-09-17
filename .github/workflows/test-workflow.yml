@@ -36,17 +36,12 @@ jobs:
           mkdir -p deployment/github-pages
           cp -r zr/ deployment/github-pages
 
-      - name: Upload artifact
-        if: success() || failure()
-        uses: actions/upload-pages-artifact@v3
-        with:
-          name: github-pages
-          path: 'deployment/github-pages'
-          retention-days: 1
-
+      - name: Clear GitHub Pages content
+        run: |
+          rm -rf *
+          touch .nojekyll  # Prevent GitHub Pages from treating it as a Jekyll site
+      
       - name: Deploy to GitHub Pages
-        if: success() || failure()
-        id: deployment
         uses: actions/deploy-pages@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
