@@ -15,11 +15,10 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    environment:
-      name: dev
-      url: ${{ steps.deployment.outputs.page_url }}
+  prepare-deployment:
     runs-on: ubuntu-latest
+    outputs:
+      deployment_path: ${{ steps.prepare.outputs.deployment_path }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,22 +31,34 @@ jobs:
           rm -rf deployment
 
       - name: Create deployment directory
+        id: prepare
         run: |
           mkdir -p deployment/github-pages
           cp -r zr/ deployment/github-pages
+          echo "deployment_path=deployment/github-pages" >> $GITHUB_ENV
 
       - name: Upload artifact
         if: success() || failure()
         uses: actions/upload-pages-artifact@v3
         with:
           name: github-pages
-          path: 'deployment/github-pages'
+          path: ${{ env.deployment_path }}
           retention-days: 1
 
+  deploy-to-github-pages:
+    needs: prepare-deployment
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to GitHub Pages
         if: success() || failure()
-        id: deployment
+        id: deploy
         uses: actions/deploy-pages@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Log Deployment URL
+        if: success() || failure()
+        run: echo "Deployment URL: ${{ job.environment.url }}"
