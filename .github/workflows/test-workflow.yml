@@ -2,7 +2,7 @@ name: Deploy static content to Pages
 
 on:
   push:
-    branches: ["main"]
+    branches: ["master"]
   workflow_dispatch:
 
 permissions:
@@ -15,10 +15,11 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  prepare-deployment:
+  deploy:
+    environment:
+      name: dev
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    outputs:
-      deployment_path: ${{ steps.prepare.outputs.deployment_path }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,42 +27,27 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: List current files in deployment directory
-        run: |
-          echo "Listing files in current deployment/github-pages:"
-          ls -R deployment/github-pages || echo "No files found"
-
       - name: Clear old deployment
         run: |
           rm -rf deployment
 
       - name: Create deployment directory
-        id: prepare
         run: |
           mkdir -p deployment/github-pages
           cp -r zr/ deployment/github-pages
-          echo "deployment_path=deployment/github-pages" >> $GITHUB_ENV
-
-      - name: List files after creating new deployment directory
-        run: |
-          echo "Files in deployment/github-pages after copying new files:"
-          ls -R deployment/github-pages || echo "No files found"
 
       - name: Upload artifact
         if: success() || failure()
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: github-pages
-          path: ${{ env.deployment_path }}
+          path: 'deployment/github-pages'
           retention-days: 1
 
-  deploy-to-github-pages:
-    needs: prepare-deployment
-    runs-on: ubuntu-latest
-    steps:
       - name: Deploy to GitHub Pages
         if: success() || failure()
-        id: deploy
+        id: deployment
         uses: actions/deploy-pages@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+
