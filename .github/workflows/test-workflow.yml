@@ -34,16 +34,13 @@ jobs:
           mkdir -p deployment
           cp index1.html deployment/index.html  # Adjust as needed
 
-      - name: Create deployment branch
+      - name: Create and push deployment branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git checkout -b $VERSION
           git add deployment
           git commit -m "Deploy version ${VERSION}"
-          git push origin $VERSION
-
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} $VERSION
