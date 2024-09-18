@@ -29,6 +29,7 @@ jobs:
           mkdir -p deployment/${VERSION}
           cp index1.html deployment/${VERSION}/index.html
 
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
