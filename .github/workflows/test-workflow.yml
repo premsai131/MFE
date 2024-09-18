@@ -36,13 +36,13 @@ jobs:
 
       - name: Create temp directory for artifact
         run: |
-          mkdir -p artifact-dir
-          cp index1.html artifact-dir/
+          mkdir -p artif-dir
+          cp index2.html artif-dir/
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'artifact-dir'  # Upload the directory containing index.html 
+          path: 'artif-dir'  # Upload the directory containing index.html 
      
       - name: Deploy to GitHub Pages
         id: deployment
