@@ -30,13 +30,13 @@ jobs:
       - name: Create deployment directory
         run: |
           mkdir -p dep/gh-pages
-          cp -r zr/ dep/gh-pages
+          cp -r index1.html dep/gh-pages
 
       - name: Upload artifact
         if: success() || failure()
         uses: actions/upload-pages-artifact@v3
         with:
-          name: github-pages
+          name: github-page
           path: 'dep/gh-pages'
           retention-days: 1
 
