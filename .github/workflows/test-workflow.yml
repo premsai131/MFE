@@ -29,15 +29,15 @@ jobs:
 
       - name: Create deployment directory
         run: |
-          mkdir -p dep/gh-pages
-          cp -r index1.html dep/gh-pages
+          mkdir -p deployment/gh-pages
+          cp -r index1.html deployment/gh-pages
 
       - name: Upload artifact
         if: success() || failure()
         uses: actions/upload-pages-artifact@v3
         with:
           name: github-page
-          path: 'dep/gh-pages'
+          path: 'deployment/gh-pages'
           retention-days: 1
 
       - name: Deploy to GitHub Pages
@@ -46,4 +46,5 @@ jobs:
         uses: actions/deploy-pages@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          folder: deployment/gh-pages
 
