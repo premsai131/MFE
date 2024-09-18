@@ -36,14 +36,19 @@ jobs:
 
       - name: Create temp directory for artifact
         run: |
-          mkdir -p artif-dir
-          cp index2.html artif-dir/
+          mkdir -p deployment/version1
+          cp index2.html deployment/version1
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'artif-dir'  # Upload the directory containing index.html 
+          name: github-pages
+          path: 'deployment/version1'  # Upload the directory containing index.html 
+          retention-days: 10
      
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with: 
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifact_name: github-pages
