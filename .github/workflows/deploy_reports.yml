@@ -16,7 +16,7 @@ jobs:
         run: |
           TIMESTAMP=$(date +'%Y-%m-%d-%H-%M-%S')
           mkdir -p reports/$TIMESTAMP
-          cp report.html reports/$TIMESTAMP/  # Assuming your report is already named `report.html`
+          cp index1.html reports/$TIMESTAMP/  # Assuming your report is already named `index1.html`
 
       - name: Commit and Push Reports
         run: |
