@@ -1,0 +1,28 @@
+name: Deploy Jekyll Site Version 1.0
+
+on:
+  push:
+    branches:
+      - main  # Or your branch for version 1.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v2
+        with:
+          ruby-version: '3.1'
+      - name: Install dependencies
+        run: bundle install
+      - name: Build site
+        run: JEKYLL_ENV=production bundle exec jekyll build -d v1.0
+      - name: Deploy to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: v1.0
+      - name: Deploy
+        uses: actions/deploy-pages@v4
+        with:
+          directory: v1.0
