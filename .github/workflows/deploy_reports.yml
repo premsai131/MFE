@@ -3,7 +3,7 @@ name: Deploy Test Reports to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
@@ -24,7 +24,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git add reports/
           git commit -m "Add report for $TIMESTAMP"
-          git push origin main
+          git push origin master
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
