@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .status-passed {
+            color: green;
+        }
+        .status-failed {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test Report - <span id="report-date"></span></h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Test Case</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody id="test-results">
+                <!-- Test results will be injected here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Example data
+        const reportDate = new Date().toLocaleDateString();
+        const testResults = [
+            { case: 'Login Test', status: 'Passed', details: 'Tested login with valid credentials' },
+            { case: 'Signup Test', status: 'Failed', details: 'Signup with existing email' },
+            { case: 'Password Reset', status: 'Passed', details: 'Password reset email sent successfully' }
+        ];
+
+        // Set report date
+        document.getElementById('report-date').textContent = reportDate;
+
+        // Inject test results
+        const resultsTable = document.getElementById('test-results');
+        testResults.forEach(result => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${result.case}</td>
+                <td class="${result.status.toLowerCase()}">${result.status}</td>
+                <td>${result.details}</td>
+            `;
+            resultsTable.appendChild(row);
+        });
+    </script>
+</body>
+</html>
