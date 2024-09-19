@@ -1,0 +1,35 @@
+name: Deploy Karate Reports
+
+on:
+  push:
+    branches:
+      - master  # Or your branch for deploying reports
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+      - name: Install dependencies
+        run: bundle install
+      - name: Build site
+        run: |
+          DATE=$(date +"%Y-%m-%d")
+          mkdir -p reports/${DATE}
+          cp index1.html reports/${DATE}/index1.html
+          # You can add more commands to copy additional files if needed
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_access_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./reports
