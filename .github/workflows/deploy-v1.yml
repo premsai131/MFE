@@ -5,6 +5,10 @@ on:
     branches:
       - master  # Or your branch for version 1.0
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,11 +22,11 @@ jobs:
         run: bundle install
       - name: Build site
         run: JEKYLL_ENV=production bundle exec jekyll build -d v1.0
-      - name: Deploy to GitHub Pages
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: v1.0
+          path: ./v1.0
       - name: Deploy
         uses: actions/deploy-pages@v4
         with:
-          directory: v1.0
+          token: ${{ secrets.GITHUB_TOKEN }}
