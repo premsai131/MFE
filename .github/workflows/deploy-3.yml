@@ -14,15 +14,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.1'
+          
       - name: Install dependencies
         run: bundle install
+        
       - name: Build site
         run: |
           DATE=$(date +"%Y-%m-%d")
+          echo "Current Date: ${DATE}"  # Print the date to the console
           mkdir -p reports/${DATE}
           cp index1.html reports/${DATE}/index1.html
 
