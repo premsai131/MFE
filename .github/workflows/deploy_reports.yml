@@ -24,8 +24,13 @@ jobs:
         run: |
           TIMESTAMP=$(date +'%Y-%m-%d-%H-%M-%S')
           mkdir -p reports/$TIMESTAMP
-          cp index1.html reports/$TIMESTAMP/
+          cp index2.html reports/$TIMESTAMP/
 
+      - name: Configure Git identity
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
+          
       - name: Checkout gh-pages branch (sparse-checkout to preserve existing files)
         run: |
           git config core.sparseCheckout true
