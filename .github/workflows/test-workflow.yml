@@ -1,9 +1,10 @@
-name: Deploy Version to GitHub Pages
+name: Deploy Multiple Versions to GitHub Pages
 
 on:
   push:
     branches:
       - master  # Trigger deployment from the master branch
+  workflow_dispatch:  # Allow manual trigger of the workflow
 
 permissions:
   contents: read
@@ -17,30 +18,30 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: # Define the environment dynamically
+      name: ${{ inputs.environment || 'production' }}  # Default to 'production' if not provided
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Determine version branch
-        id: version
-        run: |
-          VERSION=$(date +%Y%m%d%H%M%S)  # Generate a unique timestamp version
-          echo "VERSION=version-${VERSION}" >> $GITHUB_ENV
-          echo "Branch for version: $VERSION"
-
       - name: Set up deployment directory
         run: |
-          mkdir -p deployment
-          cp index1.html deployment/index.html  # Adjust as needed
+          # Define the version based on timestamp or a fixed version name
+          VERSION=$(date +%Y%m%d%H%M%S)
+          mkdir -p deployment/${VERSION}
+          cp index1.html deployment/${VERSION}/index.html
 
-      - name: Create and push deployment branch
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git checkout -b $VERSION
-          git add deployment
-          git commit -m "Deploy version ${VERSION}"
-          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} $VERSION
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: github-pages
+          path: 'deployment'
+          retention-days: 30  # Adjust the retention period as needed
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifact_name: github-pages
