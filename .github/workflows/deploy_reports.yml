@@ -34,11 +34,10 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
           
-      - name: Checkout gh-pages branch (sparse-checkout to preserve existing files)
+      - name: Checkout gh-pages branch
         run: |
-          git config core.sparseCheckout true
+          git fetch origin
           git checkout -B gh-pages origin/gh-pages
-          echo "reports/" >> .git/info/sparse-checkout  # Only checkout the reports directory
 
       - name: Add and commit new reports
         run: |
