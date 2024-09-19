@@ -26,7 +26,7 @@ jobs:
           TIMESTAMP=$(date +'%Y-%m-%d-%H-%M-%S')
           echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
           mkdir -p reports/$TIMESTAMP
-          cp index2.html reports/$TIMESTAMP/
+          cp index1.html reports/$TIMESTAMP/
           echo "Generated reports for timestamp: $TIMESTAMP"
 
       - name: Configure Git identity

@@ -3,7 +3,7 @@ name: Deploy Multiple Versions to GitHub Pages
 on:
   push:
     branches:
-      - main  # Trigger deployment from the master branch
+      - ma  # Trigger deployment from the master branch
   workflow_dispatch:  # Allow manual trigger of the workflow
 
 permissions:
