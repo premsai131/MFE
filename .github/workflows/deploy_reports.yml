@@ -21,10 +21,13 @@ jobs:
           node-version: '14'
 
       - name: Generate Timestamped Directory for Reports
+        id: generate_report
         run: |
           TIMESTAMP=$(date +'%Y-%m-%d-%H-%M-%S')
+          echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
           mkdir -p reports/$TIMESTAMP
           cp index2.html reports/$TIMESTAMP/
+          echo "Generated reports for timestamp: $TIMESTAMP"
 
       - name: Configure Git identity
         run: |
@@ -40,7 +43,7 @@ jobs:
       - name: Add and commit new reports
         run: |
           git add reports/
-          git commit -m "Add reports for $TIMESTAMP"
+          git commit -m "Add reports for ${{ env.TIMESTAMP }}"
 
       - name: Push new reports to gh-pages
         run: |
