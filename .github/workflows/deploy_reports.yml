@@ -8,26 +8,42 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
 
-      - name: Generate Timestamped Directory
+    steps:
+      - name: Checkout master branch
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Ensure full repository history is fetched
+
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Generate Timestamped Directory for Reports
         run: |
           TIMESTAMP=$(date +'%Y-%m-%d-%H-%M-%S')
           mkdir -p reports/$TIMESTAMP
-          cp index2.html reports/$TIMESTAMP/  # Copy new index2.html to timestamped directory
+          cp index1.html reports/$TIMESTAMP/
 
-      - name: Commit and Push Reports
+      - name: Checkout gh-pages branch (sparse-checkout to preserve existing files)
         run: |
-          git config --global user.email "premnaidu131@gmail.com"
-          git config --global user.name "github-actions[bot]"
+          git config core.sparseCheckout true
+          git checkout -B gh-pages origin/gh-pages
+          echo "reports/" >> .git/info/sparse-checkout  # Only checkout the reports directory
+
+      - name: Add and commit new reports
+        run: |
           git add reports/
-          git commit -m "Add report for $TIMESTAMP"
-          git push origin master
+          git commit -m "Add reports for $TIMESTAMP"
+
+      - name: Push new reports to gh-pages
+        run: |
+          git push origin gh-pages
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./reports  # Deploy all reports
+          publish_branch: gh-pages
+          publish_dir: reports
