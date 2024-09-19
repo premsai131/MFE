@@ -1,0 +1,33 @@
+name: Deploy Test Reports to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Generate Timestamped Directory
+        run: |
+          TIMESTAMP=$(date +'%Y-%m-%d-%H-%M-%S')
+          mkdir -p reports/$TIMESTAMP
+          cp report.html reports/$TIMESTAMP/  # Assuming your report is already named `report.html`
+
+      - name: Commit and Push Reports
+        run: |
+          git config --global user.email "premnaidu131@gmail.com"
+          git config --global user.name "github-actions[bot]"
+          git add reports/
+          git commit -m "Add report for $TIMESTAMP"
+          git push origin main
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./reports  # Deploy all reports
