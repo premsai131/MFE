@@ -25,11 +25,10 @@ jobs:
           DATE=$(date +"%Y-%m-%d")
           mkdir -p reports/${DATE}
           cp index1.html reports/${DATE}/index1.html
-          # You can add more commands to copy additional files if needed
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          token: ${{ secrets.TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: ./reports
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # Use 'github_token' for authentication
+          publish_branch: gh-pages  # Branch to which reports will be deployed
+          publish_dir: ./reports     # Directory to publish
