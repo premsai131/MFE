@@ -34,5 +34,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.TOKEN }}  # Use 'github_token' for authentication
-          publish_branch: gh-pages  # Branch to which reports will be deployed
           publish_dir: ./reports     # Directory to publish
