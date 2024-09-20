@@ -25,13 +25,15 @@ jobs:
         
       - name: Build site
         run: |
-          DATE=$(date +"%Y-%m-%d")
-          echo "Current Date: ${DATE}"  # Print the date to the console
-          mkdir -p reports/${DATE}
-          cp index1.html reports/${DATE}/index1.html
+          TIMESTAMP=$(date +"%Y%m%d%H%M%S")  # Generate timestamp with format: YYYYMMDDHHMMSS
+          echo "Current Timestamp: ${TIMESTAMP}"  # Print the timestamp to the console
+          mkdir -p reports/${TIMESTAMP}
+          cp index1.html reports/${TIMESTAMP}/index1.html
+
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.TOKEN }}  # Use 'github_token' for authentication
+          publish_branch: gh-pages  # Branch to which reports will be deployed
           publish_dir: ./reports     # Directory to publish
