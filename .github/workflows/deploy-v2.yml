@@ -3,7 +3,7 @@ name: Deploy Jekyll Site Version 2.0
 on:
   push:
     branches:
-      - main  # Or your branch for version 2.0
+      - master  # Or your branch for version 2.0
 
 permissions:
   id-token: write

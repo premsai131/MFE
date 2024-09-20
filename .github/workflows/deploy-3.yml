@@ -3,7 +3,7 @@ name: Deploy Karate Reports
 on:
   push:
     branches:
-      - master  # Or your branch for deploying reports
+      - main  # Or your branch for deploying reports
 
 permissions:
   id-token: write
