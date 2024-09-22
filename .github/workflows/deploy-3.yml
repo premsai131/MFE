@@ -3,18 +3,21 @@ name: Deploy Karate Reports
 on:
   push:
     branches:
-      - master  # Or any other branch to trigger deployment
+      - main  # Or any branch you want to trigger the workflow
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # Checkout the main branch to get your current codebase
+      # Checkout the repository to get access to the code and the .git directory
       - name: Checkout code
+        uses: actions/checkout@v3
+      
+      # Set git configuration
+      - name: Configure Git
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout master
 
       # Generate report directory structure
       - name: Create report directory structure
