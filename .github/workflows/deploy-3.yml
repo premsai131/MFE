@@ -3,37 +3,35 @@ name: Deploy Karate Reports
 on:
   push:
     branches:
-      - main  # Or your branch for deploying reports
-
-permissions:
-  id-token: write
-  contents: read
+      - master  # Or any other branch to trigger deployment
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.1'
-          
-      - name: Install dependencies
-        run: bundle install
-        
-      - name: Build site
+      # Checkout the main branch to get your current codebase
+      - name: Checkout code
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout main
+
+      # Generate report directory structure
+      - name: Create report directory structure
         run: |
           TIMESTAMP=$(date +"%Y%m%d%H%M%S")  # Generate timestamp with format: YYYYMMDDHHMMSS
-          echo "Current Timestamp: ${TIMESTAMP}"  # Print the timestamp to the console
-          mkdir -p reports/${TIMESTAMP}
-          cp index1.html reports/${TIMESTAMP}/index1.html
+          ENVIRONMENT="blitz"  # Example environment; can be dynamic based on input or context
+          REPORTS_DIR="reports/${ENVIRONMENT}/${TIMESTAMP}"
+          mkdir -p "${REPORTS_DIR}"  # Ensure the directory exists
+          echo "Sample report content" > "${REPORTS_DIR}/report.html"  # Sample report
 
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.TOKEN }}  # Use 'github_token' for authentication
-          publish_branch: gh-pages  # Branch to which reports will be deployed
-          publish_dir: ./reports     # Directory to publish
+      # Commit and push to the gh-pages branch
+      - name: Push to GitHub Pages
+        run: |
+          git fetch origin gh-pages  # Fetch the latest gh-pages branch
+          git checkout gh-pages || git checkout --orphan gh-pages  # Checkout gh-pages branch or create it if it doesn't exist
+          git reset --hard  # Clear current contents
+          cp -r reports/* .  # Copy the reports into the gh-pages root
+          git add .  # Stage the changes
+          git commit -m "Deploy reports for $ENVIRONMENT at $TIMESTAMP"
+          git push origin gh-pages  # Push to the gh-pages branch
