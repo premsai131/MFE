@@ -23,10 +23,10 @@ jobs:
       - name: Create report directory structure
         run: |
           TIMESTAMP=$(date +"%Y%m%d%H%M%S")  # Generate timestamp with format: YYYYMMDDHHMMSS
-          ENVIRONMENT="blitz"  # Example environment; can be dynamic based on input or context
+          ENVIRONMENT="stage"  # Example environment; can be dynamic based on input or context
           REPORTS_DIR="reports/${ENVIRONMENT}/${TIMESTAMP}"
           mkdir -p "${REPORTS_DIR}"  # Ensure the directory exists
-          cp index.html "${REPORTS_DIR}/index.html" 
+          cp index1.html "${REPORTS_DIR}/index.html" 
 
       # Commit and push to the gh-pages branch
       - name: Push to GitHub Pages
