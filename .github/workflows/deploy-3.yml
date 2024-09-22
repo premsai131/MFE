@@ -34,7 +34,6 @@ jobs:
           git fetch origin gh-pages  # Fetch the latest gh-pages branch
           git checkout gh-pages || git checkout --orphan gh-pages  # Checkout gh-pages branch or create it if it doesn't exist
           git reset --hard  # Clear current contents
-          cp -r reports/* .  # Copy the reports into the gh-pages root
-          git add .  # Stage the changes
+          git add reports/  # Add only the reports directory to the commit
           git commit -m "Deploy reports for $ENVIRONMENT at $TIMESTAMP"
           git push origin gh-pages  # Push to the gh-pages branch

@@ -3,62 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sample HTML Page</title>
+    <title>Test Report</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
+            margin: 20px;
+            background-color: #f9f9f9;
         }
-        header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 0;
-            text-align: center;
-        }
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        nav ul li {
-            display: inline;
-            margin-right: 10px;
-        }
-        nav ul li a {
-            text-decoration: none;
+        h1 {
             color: #333;
         }
-        section {
+        table {
+            width: 100%;
+            border-collapse: collapse;
             margin-top: 20px;
         }
-        footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #777;
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Welcome to My Sample HTML Page</h1>
-    </header>
 
-    <nav>
-        <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
+    <h1>Test Report</h1>
+    <p>Date: <span id="reportDate"></span></p>
 
-    <section>
-        <h2>About This Page</h2>
-        <p>This is a simple HTML page to demonstrate the structure of an HTML document. It includes elements like headings, paragraphs, and a navigation menu.</p>
-    </section>
+    <table>
+        <thead>
+            <tr>
+                <th>Test Case</th>
+                <th>Status</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody id="reportData">
+            <tr>
+                <td>Sample Test Case 1</td>
+                <td>Passed</td>
+                <td>All checks passed successfully.</td>
+            </tr>
+            <tr>
+                <td>Sample Test Case 2</td>
+                <td>Failed</td>
+                <td>Encountered an error in step 3.</td>
+            </tr>
+        </tbody>
+    </table>
 
-    <footer>
-        <p>&copy; 2024 Sample Website. All Rights Reserved.</p>
-    </footer>
+    <script>
+        // Set the report date dynamically
+        document.getElementById('reportDate').innerText = new Date().toLocaleDateString();
+    </script>
+
 </body>
 </html>
